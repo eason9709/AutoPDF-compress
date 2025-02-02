@@ -46,10 +46,10 @@ class PDFCompressorGUI:
         dpi_frame = ttk.Frame(settings_frame)
         dpi_frame.pack(fill=tk.X, padx=5, pady=5)
         ttk.Label(dpi_frame, text="DPI 設定:").pack(side=tk.LEFT)
-        self.dpi = tk.IntVar(value=150)  # 預設 DPI
+        self.dpi = tk.IntVar(value=200)  # 預設 DPI
         dpi_scale = ttk.Scale(dpi_frame, from_=72, to=300, variable=self.dpi, orient=tk.HORIZONTAL)
         dpi_scale.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
-        self.dpi_label = ttk.Label(dpi_frame, text="150")
+        self.dpi_label = ttk.Label(dpi_frame, text="200")
         self.dpi_label.pack(side=tk.LEFT, padx=5)
         dpi_scale.configure(command=self.update_dpi_label)
         
@@ -169,10 +169,12 @@ class PDFCompressorGUI:
                             self.update_status(f"無法達到目標大小，最小DPI為72，檔案大小: {output_size:.2f} KB")
                             break
             else:
+                
                 self.update_status(f"\n處理檔案: {filename}")
                 jpg_files = self.convert_pdf_to_jpg(input_path, self.dpi.get())
                 self.create_pdf_from_jpg(jpg_files, output_path)
-                self.update_status(f"檔案 {filename} 轉換完成")
+                output_size = os.path.getsize(output_path) / 1024  # 轉換為 KB
+                self.update_status(f"檔案 {filename} 轉換完成，大小: {output_size:.2f} KB")
         
         self.update_status("\n所有檔案處理完成！")
         self.start_button.config(state=tk.NORMAL)
